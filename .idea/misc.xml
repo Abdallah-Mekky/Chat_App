@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable-anydpi/ic_add.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable-anydpi/ic_back.xml" value="0.2037037037037037" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable-anydpi/ic_forward.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable-anydpi/ic_logout.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable-anydpi/ic_password.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable-hdpi/custom_type_message_chat.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable-mdpi/custom_item_room_recycler.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable-mdpi/custom_rooms_recyclerview.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable-xhdpi/custom_item_message_recevie.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable-xhdpi/custom_item_message_sent.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable/custom_background_spinner.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable/custom_create_account_button.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable/custom_create_room_button.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable/custom_item_message_recevie.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable/custom_item_message_sent.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable/custom_item_room_recycler.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable/custom_type_message_chat.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable/ic_menu_camera.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/drawable/side_nav_bar.xml" value="0.2203125" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/activity_add_room.xml" value="0.22" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/activity_chat.xml" value="0.22" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/activity_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/activity_login.xml" value="0.22" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/activity_register.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/activity_room_details.xml" value="0.2" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/activity_splash.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/app_bar_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/content_chat.xml" value="0.19907407407407407" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/content_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/content_room_details.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/item_catgory.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/item_message_recevie.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/item_message_sent.xml" value="0.22" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/item_room.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/layout/nav_header_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/menu/activity_main_drawer.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/menu/home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/menu/leave_room_menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/Route_Android_Diploma/AndroidTasks/Chat_App/app/src/main/res/menu/menu_main.xml" value="0.20416666666666666" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

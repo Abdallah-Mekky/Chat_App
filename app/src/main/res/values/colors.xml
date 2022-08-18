@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue">#3598DB</color>
+    <color name="dark_Bule">#2872A5</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="orCreateAcc_color">#505050</color>
+    <color name="typeMessage_color">#282F39</color>
+    <color name="roomDescription_color">#7F7F7F</color>
+    <color name="messageSent_color">#787993</color>
+    <color name="dataSent_color">#282F39</color>
+</resources>
