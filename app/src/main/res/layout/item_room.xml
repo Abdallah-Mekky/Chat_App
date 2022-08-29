@@ -55,7 +55,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/roomImage"
-                tools:text="Room Name" />
+                tools:text="Room Name"
+                android:gravity="center"/>
 
             <TextView
                 android:id="@+id/numberOfMembers"
