@@ -30,6 +30,12 @@ class SplashViewModel : BaseViewModel<NavigatorSplash>() {
 
                 Log.e("userrr", "" + currentUser)
 
+                if(currentUser != null){
+                    navigator?.goToHomeActivity()
+                }else{
+                    navigator?.goToLoginActivity()
+                }
+
             }, onFailureListener = {
 
                 toastMessageLiveData.value = it.localizedMessage
