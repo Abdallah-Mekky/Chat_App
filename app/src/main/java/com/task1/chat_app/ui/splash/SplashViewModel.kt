@@ -26,16 +26,9 @@ class SplashViewModel : BaseViewModel<NavigatorSplash>() {
 
                 var currentUser = user.toObject(AppUser::class.java)
                 DataUtils.currentUser = currentUser
+                navigator?.goToHomeActivity()
 
                 Log.e("userrr", "" + currentUser)
-
-                if (currentUser != null) {
-
-                    navigator?.goToHomeActivity()
-                } else {
-
-                    navigator?.goToLoginActivity()
-                }
 
             }, onFailureListener = {
 
