@@ -1,5 +1,7 @@
 # Chat App
 
+Please ⭐️ this repo and share it with others.
+
 
 # Description
 This project is a chat application that contains a variety of features, starting with the possibility of logging in,
@@ -29,13 +31,13 @@ https://user-images.githubusercontent.com/80880411/187263704-941fab13-b102-4faa-
 * [Live Data](https://bit.ly/3KuahQR) - LiveData is an observable data holder class. Unlike a regular observable, LiveData is lifecycle-aware, meaning it respects the lifecycle of other app components, such as activities, fragments, or services.
 * [Data Binding](https://bit.ly/3PVsjNc) - The Data Binding Library is a support library that allows you to bind UI components in your layouts to data sources in your app using a declarative format rather than programmatically.
 * [Firebase](https://firebase.google.com/docs) - Tools to develop high-quality apps 
-*  * [Firebase Authentication](https://bit.ly/3RlAfZd) - Firebase Authentication aims to make building secure authentication systems easy, while improving the sign-in and onboarding experience for end users.
-*  * [Cloud Firestore](https://bit.ly/3RhWqPL) - Cloud Firestore is a NoSQL document database that lets you easily store, sync, and query data for your mobile and web apps - at global scale.
+  * [Firebase Authentication](https://bit.ly/3RlAfZd) - Firebase Authentication aims to make building secure authentication systems easy, while improving the sign-in and onboarding experience for end users.
+  * [Cloud Firestore](https://bit.ly/3RhWqPL) - Cloud Firestore is a NoSQL document database that lets you easily store, sync, and query data for your mobile and web apps - at global scale.
 
 # Features
 * Firebase
- * * Firebase Authentication (Email and Password)
- * * Cloud Firestore
+   * Firebase Authentication (Email and Password)
+   * Cloud Firestore
 
 # Architecture pattern Used
 * [MVVM](https://developer.android.com/jetpack/guide)
