@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.task1.chat_app.database.model.Room" />
+            type="com.task1.domain.model.Room" />
 
     </data>
 

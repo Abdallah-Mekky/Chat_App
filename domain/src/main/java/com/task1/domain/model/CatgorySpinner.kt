@@ -1,12 +1,27 @@
-package com.task1.chat_app.database.model
+package com.task1.domain.model
 
-import com.task1.chat_app.R
+import com.task1.domain.R
+
 
 data class CatgorySpinner(
     var catgoryId: String? = null,
     var catgoryName: String? = null,
     var catgoryImage: Int? = null
 ) {
+
+
+    fun getCatgoriesList(): List<CatgorySpinner> {
+
+        var catgoriesList = listOf(
+
+            getImageById("MOVIES"),
+            getImageById("CODING"),
+            getImageById("SPORT")
+        )
+
+
+        return catgoriesList
+    }
 
     companion object {
 
@@ -38,19 +53,9 @@ data class CatgorySpinner(
             }
         }
 
-
-        fun getCatgoriesList(): List<CatgorySpinner> {
-
-            var catgoriesList = listOf(
-
-                getImageById("MOVIES"),
-                getImageById("CODING"),
-                getImageById("SPORT")
-            )
-
-
-            return catgoriesList
-        }
-
     }
+
+
+
+
 }

@@ -1,47 +1,61 @@
 package com.task1.chat_app.ui.roomDetails
 
+import androidx.lifecycle.viewModelScope
 import com.task1.chat_app.DataUtils
 import com.task1.chat_app.base.BaseViewModel
-import com.task1.chat_app.database.addUserToRoom
-import com.task1.chat_app.database.getUsersOfRoomsFromFireStore
-import com.task1.chat_app.database.model.Room
-import com.task1.chat_app.database.model.RoomUser
-import com.task1.chat_app.database.updateNumberOfUsers
+import com.task1.domain.model.Room
+import com.task1.domain.model.RoomUser
+import com.task1.domain.repos.userRoomRepo.UserRoomRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RoomDetailsViewModel : BaseViewModel<NavigatorRoomDetails>() {
-
-    var currentRoom: Room? = null
+@HiltViewModel
+class RoomDetailsViewModel @Inject constructor(
+    val userRoomRepo: UserRoomRepo,
+    var currentRoom: Room
+) : BaseViewModel<NavigatorRoomDetails>() {
 
     fun addUser() {
 
         progressDialogLiveData.value = true
 
-        var user = RoomUser(DataUtils.currentUser?.userID, DataUtils.currentUser?.userName)
-
-        addUserToRoom(user, currentRoom?.roomId!!, onSuccessListener = {
-
-            progressDialogLiveData.value = false
-            navigator?.navigateToChatActivity()
+        val user = RoomUser(DataUtils.currentUser?.userID, DataUtils.currentUser?.userName)
 
 
-            getUsersOfRoomsFromFireStore(currentRoom?.roomId!!, onSuccessListener = {
+        viewModelScope.launch {
 
-                var sizeOfUsers = it.toObjects(RoomUser::class.java)
 
-                updateNumberOfUsers(currentRoom?.roomId!!, sizeOfUsers.size, onSuccessListener = {
+            try {
 
-                },
-                    onFailureListener = {
-                        progressDialogLiveData.value = false
-                    })
-
-            }, onFailureListener = {
+                userRoomRepo.addUserToRoom(user, currentRoom.roomId!!)
                 progressDialogLiveData.value = false
-            })
+                navigator?.navigateToChatActivity()
 
-        }, onFailureListener = {
+                try {
 
-            progressDialogLiveData.value = false
-        })
+                    val sizeOfUsers =
+                        userRoomRepo.getUsersOfRoomsFromFireStore(currentRoom.roomId!!)
+                            .toObjects(RoomUser::class.java)
+
+                    try {
+
+                        userRoomRepo.updateNumberOfUsers(currentRoom.roomId!!, sizeOfUsers.size)
+
+                    } catch (ex: Exception) {
+
+                        progressDialogLiveData.value = false
+
+                    }
+
+                } catch (ex: Exception) {
+                    progressDialogLiveData.value = false
+                }
+
+            } catch (ex: Exception) {
+                progressDialogLiveData.value = false
+            }
+
+        }
     }
 }

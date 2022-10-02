@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.task1.chat_app.R
 import com.task1.chat_app.databinding.ItemRoomBinding
-import com.task1.chat_app.database.model.Room
+import com.task1.domain.model.Room
 
 class RoomsAdapter(var items: List<Room?>?) : RecyclerView.Adapter<RoomsAdapter.RoomsViewHolder>() {
 

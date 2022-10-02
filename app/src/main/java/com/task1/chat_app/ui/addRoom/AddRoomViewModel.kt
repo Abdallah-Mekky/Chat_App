@@ -1,22 +1,30 @@
 package com.task1.chat_app.ui.addRoom
 
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.task1.chat_app.base.BaseViewModel
-import com.task1.chat_app.database.addRoomToFirestore
-import com.task1.chat_app.database.model.CatgorySpinner
-import com.task1.chat_app.database.model.Room
+import com.task1.domain.model.CatgorySpinner
+import com.task1.domain.model.Room
+import com.task1.domain.repos.roomRepo.RoomRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AddRoomViewModel : BaseViewModel<NavigatorAddRoom>() {
+@HiltViewModel
+class AddRoomViewModel @Inject constructor(private val roomRepo: RoomRepo,
+val catgorySpinner: CatgorySpinner) : BaseViewModel<NavigatorAddRoom>() {
 
 
     var roomName = ObservableField<String>()
     var roomNameError = ObservableField<String>()
     var roomDescreption = ObservableField<String>()
     var roomDescreptionError = ObservableField<String>()
-    var catgoriesList = CatgorySpinner.getCatgoriesList()
+    var catgoriesList = catgorySpinner.getCatgoriesList()
     var selectedItem = catgoriesList[0]
-    var isAdded = MutableLiveData<Boolean>()
+    var isAddedMutableLiveData = MutableLiveData<Boolean>()
+    var isAdded: LiveData<Boolean> = isAddedMutableLiveData
 
 
     fun createRoom() {
@@ -29,7 +37,7 @@ class AddRoomViewModel : BaseViewModel<NavigatorAddRoom>() {
 
     private fun sendRoomToFirestore() {
 
-        isAdded.value = false
+        isAddedMutableLiveData.value = false
 
         progressDialogLiveData.value = true
 
@@ -39,17 +47,22 @@ class AddRoomViewModel : BaseViewModel<NavigatorAddRoom>() {
             roomDescription = roomDescreption.get()
         )
 
-        addRoomToFirestore(currentRoom, onSuccessListener = {
+        viewModelScope.launch {
 
-            progressDialogLiveData.value = false
-            isAdded.value = true
+            try {
 
-        }, onFailureListener = {
+                roomRepo.addRoomToFirestore(currentRoom)
+                progressDialogLiveData.value = false
+                isAddedMutableLiveData.value = true
 
-            progressDialogLiveData.value = false
-            messageLiveData.value = it.localizedMessage
 
-        })
+            } catch (ex: Exception) {
+
+                progressDialogLiveData.value = false
+                messageLiveData.value = ex.localizedMessage
+            }
+
+        }
     }
 
 
@@ -77,6 +90,4 @@ class AddRoomViewModel : BaseViewModel<NavigatorAddRoom>() {
 
         return isVaild
     }
-
-
 }

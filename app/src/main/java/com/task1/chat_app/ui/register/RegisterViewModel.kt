@@ -1,15 +1,18 @@
 package com.task1.chat_app.ui.register
 
 import androidx.databinding.ObservableField
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import androidx.lifecycle.viewModelScope
 import com.task1.chat_app.base.BaseViewModel
-import com.task1.chat_app.database.addUserToFirestore
-import com.task1.chat_app.database.model.AppUser
+import com.task1.domain.model.AppUser
+import com.task1.domain.repos.userFirebaseRepo.UserFirebaseRepo
+import com.task1.domain.repos.userFirestoreRepo.UserFirestoreRepo
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RegisterViewModel : BaseViewModel<NavigatorRegister>() {
+class RegisterViewModel @Inject constructor(
+    val userFirestoreRepo: UserFirestoreRepo,
+    val userFirebaseRepo: UserFirebaseRepo
+) : BaseViewModel<NavigatorRegister>() {
 
     var firstName = ObservableField<String>()
     var firstNameError = ObservableField<String>()
@@ -21,13 +24,11 @@ class RegisterViewModel : BaseViewModel<NavigatorRegister>() {
     var emailError = ObservableField<String>()
     var password = ObservableField<String>()
     var passwordError = ObservableField<String>()
-    val auth = Firebase.auth
 
 
+    fun createAccount() {
 
-    fun createAccount(){
-
-        if(vaildiate()){
+        if (vaildiate()) {
 
             addUserToFirebase()
         }
@@ -42,52 +43,62 @@ class RegisterViewModel : BaseViewModel<NavigatorRegister>() {
         password.set(null)
     }
 
-    fun openLoginActivity(){
+    fun openLoginActivity() {
 
-        navigator?.navigateToLoginActifity()
+        navigator?.navigateToLoginActivity()
     }
 
-    fun createFirestoreUser(userID:String?){
+    suspend fun createFirestoreUser(userID: String?) {
 
-        val currentUser = AppUser(userID,firstName.get(),lastName.get(),userName.get(),email.get())
+        val currentUser =
+            AppUser(userID, firstName.get(), lastName.get(), userName.get(), email.get())
 
-        addUserToFirestore(currentUser, OnSuccessListener {
+        viewModelScope.launch {
 
-            progressDialogLiveData.value = false
-            openLoginActivity()
-        }, OnFailureListener {
 
-            progressDialogLiveData.value = false
-            messageLiveData.value = it.localizedMessage
-            return@OnFailureListener
-        })
+            try {
+
+                userFirestoreRepo.addUserToFirestore(currentUser)
+                progressDialogLiveData.value = false
+                openLoginActivity()
+
+            } catch (ex: Exception) {
+
+                progressDialogLiveData.value = false
+                messageLiveData.value = ex.localizedMessage
+
+            }
+
+        }
+
     }
 
     private fun addUserToFirebase() {
 
         progressDialogLiveData.value = true
 
-        auth.createUserWithEmailAndPassword(email.get()!!,password.get()!!).addOnCompleteListener{ result ->
+        viewModelScope.launch {
 
+            try {
 
-            if(result.isSuccessful){
-
+                val result = userFirebaseRepo.createFirebaseUser(email.get()!!, password.get()!!)
                 progressDialogLiveData.value = false
-
-                createFirestoreUser(result.result.user?.uid)
+                createFirestoreUser(result.user?.uid)
                 clearFileds()
-            }
-            else{
+
+            } catch (ex: Exception) {
 
                 progressDialogLiveData.value = false
 
-                if(result.exception?.localizedMessage == "The email address is already in use by another account."){
+                if (ex.localizedMessage == "The email address is already in use by another account.") {
 
                     messageLiveData.value = "Error in email address"
-                }else{
-                    messageLiveData.value = result.exception?.localizedMessage
+                } else {
+                    messageLiveData.value = ex.localizedMessage
                 }
+
             }
+
         }
     }
 
@@ -95,55 +106,46 @@ class RegisterViewModel : BaseViewModel<NavigatorRegister>() {
 
         var isVaild = true
 
-        if(firstName.get().isNullOrBlank()){
+        if (firstName.get().isNullOrBlank()) {
 
             firstNameError.set("Please Enter First Name")
             isVaild = false
 
-        }
-
-        else{
+        } else {
 
             firstNameError.set(null)
         }
 
-        if(lastName.get().isNullOrBlank()){
+        if (lastName.get().isNullOrBlank()) {
 
             lastNameError.set("Please Enter Last Name")
             isVaild = false
-        }
-
-        else{
+        } else {
 
             lastNameError.set(null)
         }
 
-        if(userName.get().isNullOrBlank()){
+        if (userName.get().isNullOrBlank()) {
 
             userNameError.set("Please Enter User Name")
             isVaild = false
-        }
-
-        else{
+        } else {
             userNameError.set(null)
         }
 
-        if(email.get().isNullOrBlank()){
+        if (email.get().isNullOrBlank()) {
 
             emailError.set("Please Enter Email")
             isVaild = false
-        }
-
-        else{
+        } else {
             emailError.set(null)
         }
 
-        if(password.get().isNullOrBlank()){
+        if (password.get().isNullOrBlank()) {
 
             passwordError.set("Please Enter password")
             isVaild = false
-        }
-        else{
+        } else {
             passwordError.set(null)
         }
         return isVaild

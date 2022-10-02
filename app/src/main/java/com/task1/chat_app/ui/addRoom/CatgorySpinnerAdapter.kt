@@ -7,7 +7,7 @@ import android.widget.BaseAdapter
 import androidx.databinding.DataBindingUtil
 import com.task1.chat_app.R
 import com.task1.chat_app.databinding.ItemCatgoryBinding
-import com.task1.chat_app.database.model.CatgorySpinner
+import com.task1.domain.model.CatgorySpinner
 
 class CatgorySpinnerAdapter(var items: List<CatgorySpinner?>?) : BaseAdapter() {
 
@@ -54,6 +54,11 @@ class CatgorySpinnerAdapter(var items: List<CatgorySpinner?>?) : BaseAdapter() {
 
         catgorySpinnerViewHolder.bind(item!!)
         return currentView!!
+    }
+
+    fun refreashAdapter(items: List<CatgorySpinner>) {
+
+        this.items = items
     }
 
     class ViewHolder(val itemCatgoryBinding: ItemCatgoryBinding) {

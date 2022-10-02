@@ -4,16 +4,20 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.task1.chat_app.R
 import com.task1.chat_app.base.BaseActivity
-import com.task1.chat_app.database.model.Room
 import com.task1.chat_app.databinding.ActivityAddRoomBinding
+import com.task1.domain.model.Room
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class AddRoomActivity : BaseActivity<ActivityAddRoomBinding, AddRoomViewModel>(), NavigatorAddRoom {
 
 
-    lateinit var catgorySpinnerAdapter: CatgorySpinnerAdapter
+    @Inject lateinit var catgorySpinnerAdapter: CatgorySpinnerAdapter
     lateinit var room: Room
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,12 +37,12 @@ class AddRoomActivity : BaseActivity<ActivityAddRoomBinding, AddRoomViewModel>()
 
     override fun setViewModel(): AddRoomViewModel {
 
-        return AddRoomViewModel()
+        return ViewModelProvider(this).get(AddRoomViewModel::class.java)
     }
 
     fun initSpinner() {
 
-        catgorySpinnerAdapter = CatgorySpinnerAdapter(viewModel.catgoriesList)
+        catgorySpinnerAdapter.refreashAdapter(viewModel.catgoriesList)
         viewDataBinding.spinner.setAdapter(catgorySpinnerAdapter)
 
         viewDataBinding.spinner.onItemSelectedListener =

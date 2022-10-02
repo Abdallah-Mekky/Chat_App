@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.task1.chat_app.database.model.CatgorySpinner" />
+            type="com.task1.domain.model.CatgorySpinner" />
 
     </data>
 

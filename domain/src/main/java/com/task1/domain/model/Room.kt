@@ -1,4 +1,4 @@
-package com.task1.chat_app.database.model
+package com.task1.domain.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -12,6 +12,8 @@ data class Room(
     var roomDescription: String? = null,
     var numberOfUsers: Int? = 0
 ) : Parcelable {
+
+
 
     fun getImageFromId(): Int? {
 

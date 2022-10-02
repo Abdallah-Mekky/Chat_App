@@ -1,6 +1,7 @@
 package com.task1.chat_app.ui.home
 
-import com.task1.chat_app.database.model.Room
+import com.task1.domain.model.Room
+
 
 interface NavigatorHome {
     fun openNavigationView()

@@ -1,6 +1,6 @@
 package com.task1.chat_app
 
-import com.task1.chat_app.database.model.AppUser
+import com.task1.domain.model.AppUser
 
 object DataUtils {
 

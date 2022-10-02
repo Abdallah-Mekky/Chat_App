@@ -2,16 +2,20 @@ package com.task1.chat_app.ui.roomDetails
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.task1.chat_app.Constants
 import com.task1.chat_app.R
 import com.task1.chat_app.base.BaseActivity
-import com.task1.chat_app.database.model.Room
 import com.task1.chat_app.databinding.ActivityRoomDetailsBinding
 import com.task1.chat_app.ui.chat.ChatActivity
 import com.task1.chat_app.ui.home.HomeActivity
+import com.task1.domain.model.Room
+import dagger.hilt.android.AndroidEntryPoint
 
 
-class RoomDetailsActivity : BaseActivity<ActivityRoomDetailsBinding, RoomDetailsViewModel>(), NavigatorRoomDetails {
+@AndroidEntryPoint
+class RoomDetailsActivity : BaseActivity<ActivityRoomDetailsBinding, RoomDetailsViewModel>(),
+    NavigatorRoomDetails {
 
     lateinit var roomFromIntent: Room
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +35,7 @@ class RoomDetailsActivity : BaseActivity<ActivityRoomDetailsBinding, RoomDetails
 
     override fun setViewModel(): RoomDetailsViewModel {
 
-        return RoomDetailsViewModel()
+        return ViewModelProvider(this).get(RoomDetailsViewModel::class.java)
     }
 
     override fun navigateToChatActivity() {

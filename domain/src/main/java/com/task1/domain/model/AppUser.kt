@@ -1,4 +1,4 @@
-package com.task1.chat_app.database.model
+package com.task1.domain.model
 
 data class AppUser(
     var userID: String? = null,

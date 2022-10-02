@@ -4,20 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.task1.chat_app.Constants
 import com.task1.chat_app.R
 import com.task1.chat_app.base.BaseActivity
-import com.task1.chat_app.database.model.Room
 import com.task1.chat_app.databinding.ActivityHomeBinding
 import com.task1.chat_app.ui.addRoom.AddRoomActivity
 import com.task1.chat_app.ui.chat.ChatActivity
 import com.task1.chat_app.ui.login.LoginActivity
 import com.task1.chat_app.ui.roomDetails.RoomDetailsActivity
+import com.task1.domain.model.Room
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), NavigatorHome {
 
 
-    var roomsAdapter = RoomsAdapter(null)
+    @Inject lateinit var roomsAdapter: RoomsAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +57,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), Navigat
 
     override fun setViewModel(): HomeViewModel {
 
-        return HomeViewModel()
+        return ViewModelProvider(this).get(HomeViewModel::class.java)
     }
 
     override fun openNavigationView() {

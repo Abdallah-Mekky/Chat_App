@@ -1,21 +1,30 @@
 package com.task1.chat_app.ui.home
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.task1.chat_app.DataUtils
 import com.task1.chat_app.base.BaseViewModel
-import com.task1.chat_app.database.checkUserExistenceInRoomUser
-import com.task1.chat_app.database.getRoomsFromFirestore
-import com.task1.chat_app.database.model.Room
-import com.task1.chat_app.database.model.RoomUser
+import com.task1.domain.model.Room
+import com.task1.domain.model.RoomUser
+import com.task1.domain.repos.roomRepo.RoomRepo
+import com.task1.domain.repos.userRoomRepo.UserRoomRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel : BaseViewModel<NavigatorHome>() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(val userRoomRepo: UserRoomRepo, val roomRepo: RoomRepo) :
+    BaseViewModel<NavigatorHome>() {
 
 
-    var roomsList = MutableLiveData<List<Room>>()
+    var roomsListMutableLiveData = MutableLiveData<List<Room>>()
+    var roomsList: LiveData<List<Room>> = roomsListMutableLiveData
     var currentUser = DataUtils.currentUser
+
 
     fun controlNavigationView() {
         navigator?.openNavigationView()
@@ -34,15 +43,22 @@ class HomeViewModel : BaseViewModel<NavigatorHome>() {
 
         progressDialogLiveData.value = true
 
-        getRoomsFromFirestore(onSuccessListener = {
-            progressDialogLiveData.value = false
-            roomsList.value = it.toObjects(Room::class.java)
-        },
-            onFailureListener = {
+        viewModelScope.launch {
+
+            try {
+
+                roomsListMutableLiveData.value =
+                    roomRepo.getRoomsFromFirestore().toObjects(Room::class.java)
+                progressDialogLiveData.value = false
+
+            } catch (ex: Exception) {
 
                 progressDialogLiveData.value = false
-                messageLiveData.value = it.localizedMessage
-            })
+                messageLiveData.value = ex.localizedMessage
+            }
+
+        }
+
     }
 
     fun logout() {
@@ -56,22 +72,27 @@ class HomeViewModel : BaseViewModel<NavigatorHome>() {
 
     fun controlNavigationOfUser(room: Room) {
 
-        checkUserExistenceInRoomUser(
-            DataUtils.currentUser?.userID,
-            roomId = room.roomId!!,
-            onSuccessListener = {
+        viewModelScope.launch {
 
-                var user = it.toObject(RoomUser::class.java)
+            try {
+
+                val user = userRoomRepo.checkUserExistenceInRoomUser(
+                    DataUtils.currentUser?.userID,
+                    room.roomId!!
+                )
+                    .toObject(RoomUser::class.java)
+
                 if (user != null) {
                     navigator?.openChatActivity(room)
                 } else {
 
                     navigator?.openRoomDetailsActivity(room)
                 }
-            },
-            onFailureListener = {
+
+            } catch (ex: Exception) {
 
                 toastMessageLiveData.value = "fail"
-            })
+            }
+        }
     }
 }

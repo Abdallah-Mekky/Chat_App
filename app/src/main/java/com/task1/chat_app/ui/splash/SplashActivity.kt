@@ -2,13 +2,16 @@ package com.task1.chat_app.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.task1.chat_app.R
 import com.task1.chat_app.base.BaseActivity
 import com.task1.chat_app.databinding.ActivitySplashBinding
 import com.task1.chat_app.ui.home.HomeActivity
 import com.task1.chat_app.ui.login.LoginActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-class SplashActivity : BaseActivity<ActivitySplashBinding,SplashViewModel>(),NavigatorSplash{
+@AndroidEntryPoint
+class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(), NavigatorSplash {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,6 +41,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding,SplashViewModel>(),Nav
 
     override fun setViewModel(): SplashViewModel {
 
-        return SplashViewModel()
+        return ViewModelProvider(this).get(SplashViewModel::class.java)
     }
 }

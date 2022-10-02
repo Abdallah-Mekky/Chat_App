@@ -1,19 +1,25 @@
 package com.task1.chat_app.ui.splash
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.task1.chat_app.DataUtils
 import com.task1.chat_app.base.BaseViewModel
-import com.task1.chat_app.database.checkUserExistence
-import com.task1.chat_app.database.model.AppUser
+import com.task1.domain.model.AppUser
+import com.task1.domain.repos.userFirestoreRepo.UserFirestoreRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SplashViewModel : BaseViewModel<NavigatorSplash>() {
+@HiltViewModel
+class SplashViewModel @Inject constructor(val userFirestoreRepo: UserFirestoreRepo) :
+    BaseViewModel<NavigatorSplash>() {
 
 
     fun autoLogin() {
 
-        var firebaseUser = Firebase.auth.currentUser
+        val firebaseUser = Firebase.auth.currentUser
 
         if (firebaseUser == null) {
 
@@ -21,23 +27,27 @@ class SplashViewModel : BaseViewModel<NavigatorSplash>() {
 
         } else {
 
-            //retrive the data of this user from firestore
-            checkUserExistence(firebaseUser.uid, onSuccessListener = { user ->
+            viewModelScope.launch {
 
-                var currentUser = user.toObject(AppUser::class.java)
-                DataUtils.currentUser = currentUser
-                Log.e("userrr", "" + currentUser)
+                try {
 
-                if(currentUser != null){
-                    navigator?.goToHomeActivity()
-                }else{
-                    navigator?.goToLoginActivity()
+                    val currentUser = userFirestoreRepo.checkUserExistence(firebaseUser.uid)
+                        .toObject(AppUser::class.java)
+                    DataUtils.currentUser = currentUser
+                    Log.e("user", "" + currentUser)
+
+                    if (currentUser != null) {
+                        navigator?.goToHomeActivity()
+                    } else {
+                        navigator?.goToLoginActivity()
+                    }
+
+                } catch (ex: Exception) {
+
+                    toastMessageLiveData.value = ex.localizedMessage
+
                 }
-
-            }, onFailureListener = {
-
-                toastMessageLiveData.value = it.localizedMessage
-            })
+            }
         }
 
     }

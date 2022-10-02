@@ -1,23 +1,30 @@
 package com.task1.chat_app.ui.chat
 
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.Query
+import androidx.lifecycle.viewModelScope
 import com.task1.chat_app.DataUtils
 import com.task1.chat_app.base.BaseViewModel
-import com.task1.chat_app.database.*
-import com.task1.chat_app.database.model.Message
-import com.task1.chat_app.database.model.Room
-import com.task1.chat_app.database.model.RoomUser
-import java.util.*
+import com.task1.domain.model.Message
+import com.task1.domain.model.Room
+import com.task1.domain.model.RoomUser
+import com.task1.domain.repos.messageRepo.MessageRepo
+import com.task1.domain.repos.userRoomRepo.UserRoomRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ChatViewModel : BaseViewModel<NavigatorChat>() {
+@HiltViewModel
+class ChatViewModel @Inject constructor(val userRoomRepo: UserRoomRepo,
+                                        val messageRepo: MessageRepo,
+                                        var currentRoom: Room,
+                                        var time: Long) : BaseViewModel<NavigatorChat>() {
+
 
     var messageContent = ObservableField<String>()
-    var currentRoom: Room? = null
-    var newMessagesList = MutableLiveData<MutableList<Message>>()
-    var time = Date().time
+    var newMessagesListMutableLiveData = MutableLiveData<MutableList<Message>>()
+    var newMessagesList: LiveData<MutableList<Message>> = newMessagesListMutableLiveData
 
 
     fun send() {
@@ -29,21 +36,25 @@ class ChatViewModel : BaseViewModel<NavigatorChat>() {
     }
 
     fun sendMessage() {
-        var message = Message(
+        val message = Message(
             messageContent = messageContent.get(),
             messageDateTime = time,
             senderId = DataUtils.currentUser?.userID,
             senderName = DataUtils.currentUser?.userName
         )
 
-        addMessageToFirestore(message, currentRoom?.roomId!!, onSuccessListener = {
+        viewModelScope.launch {
 
-            messageContent.set(null)
-        }, onFailureListener = {
+            try {
 
-            messageLiveData.value = it.localizedMessage
-        })
+                messageContent.set(null)
+                messageRepo.addMessageToFirestore(message, currentRoom.roomId!!)
 
+            } catch (ex: Exception) {
+
+                messageLiveData.value = ex.localizedMessage
+            }
+        }
     }
 
     private fun valdiate(): Boolean {
@@ -63,65 +74,70 @@ class ChatViewModel : BaseViewModel<NavigatorChat>() {
 
     fun deleteUser() {
 
-        deleteUserFromRoomUser(
-            DataUtils.currentUser?.userID,
-            currentRoom?.roomId!!,
-            onSuccessListener = {
 
+        viewModelScope.launch {
+
+            try {
+
+                userRoomRepo.deleteUserFromRoomUser(
+                    DataUtils.currentUser?.userID,
+                    currentRoom.roomId!!
+                )
                 messageLeaveRoomLiveData.value = "User Successfully Deleted From This Room"
 
-                getUsersOfRoomsFromFireStore(currentRoom?.roomId!!, onSuccessListener = {
+                try {
 
-                    var sizeOfUsers = it.toObjects(RoomUser::class.java)
+                    val sizeOfUsers =
+                        userRoomRepo.getUsersOfRoomsFromFireStore(currentRoom.roomId!!)
+                            .toObjects(RoomUser::class.java)
 
-                    updateNumberOfUsers(currentRoom?.roomId!!,
-                        sizeOfUsers.size,
-                        onSuccessListener = {
+                    try {
 
-                        },
-                        onFailureListener = {
-                            toastMessageLiveData.value = it.localizedMessage
-                        })
+                        userRoomRepo.updateNumberOfUsers(currentRoom.roomId!!, sizeOfUsers.size)
 
-                }, onFailureListener = {
-                    toastMessageLiveData.value = it.localizedMessage
-                })
+                    } catch (ex: Exception) {
 
-            },
-            onFailureListener = {
+                        toastMessageLiveData.value = ex.localizedMessage
+                    }
 
-                toastMessageLiveData.value = it.localizedMessage
-            })
+                } catch (ex: Exception) {
+                    toastMessageLiveData.value = ex.localizedMessage
+
+                }
+            } catch (ex: Exception) {
+
+                toastMessageLiveData.value = ex.localizedMessage
+
+            }
+        }
     }
 
 
     fun getMessages() {
 
-        getMessageCollectionRef(roomId = currentRoom?.roomId!!).orderBy(
-            "messageDateTime",
-            Query.Direction.ASCENDING
-        )
-            .addSnapshotListener { snapshots, ex ->
+        viewModelScope.launch {
 
-                if (ex != null) {
+            try {
+
+                val result = messageRepo.getMessageCollectionRef(currentRoom.roomId!!)
+
+                try {
+
+                    messageRepo.getMessages(
+                        result,
+                        newMessagesListMutableLiveData,
+                        toastMessageLiveData
+                    )
+                } catch (ex: Exception) {
 
                     toastMessageLiveData.value = "error in get messages"
-                } else {
-
-                    val newMessages = mutableListOf<Message>()
-                    for (dc in snapshots!!.documentChanges) {
-                        when (dc.type) {
-                            DocumentChange.Type.ADDED -> {
-
-                                val message = dc.document.toObject(Message::class.java)
-                                newMessages.add(message)
-
-                            }
-                        }
-                    }
-                    newMessagesList.value = newMessages
                 }
+
+            } catch (ex: Exception) {
+
+                toastMessageLiveData.value = "error in get messages"
             }
+        }
     }
 
 }

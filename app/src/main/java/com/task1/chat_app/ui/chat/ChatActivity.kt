@@ -2,17 +2,21 @@ package com.task1.chat_app.ui.chat
 
 import android.os.Bundle
 import android.view.Menu
-import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.task1.chat_app.Constants
 import com.task1.chat_app.R
 import com.task1.chat_app.base.BaseActivity
-import com.task1.chat_app.database.model.Room
 import com.task1.chat_app.databinding.ActivityChatBinding
+import com.task1.domain.model.Room
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ChatActivity : BaseActivity<ActivityChatBinding, ChatViewModel>(), NavigatorChat {
 
+
+    @Inject lateinit var chatAdapter: ChatAdapter
     lateinit var roomFromIntent: Room
-    var chatAdapter = ChatAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +35,6 @@ class ChatActivity : BaseActivity<ActivityChatBinding, ChatViewModel>(), Navigat
         deleteUserFromFirestore()
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
         menuInflater.inflate(R.menu.leave_room_menu, menu)
@@ -46,7 +49,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding, ChatViewModel>(), Navigat
 
     override fun setViewModel(): ChatViewModel {
 
-        return ChatViewModel()
+        return ViewModelProvider(this).get(ChatViewModel::class.java)
     }
 
     fun deleteUserFromFirestore() {
@@ -65,10 +68,10 @@ class ChatActivity : BaseActivity<ActivityChatBinding, ChatViewModel>(), Navigat
 
     fun subcribeToLiveData() {
 
-        viewModel.newMessagesList.observe(this, Observer { newMessages ->
+        viewModel.newMessagesList.observe(this) { newMessages ->
             chatAdapter.refreashAdapter(newMessages)
             viewDataBinding.messagesRecyclerView.smoothScrollToPosition(chatAdapter.itemCount)
-        })
+        }
     }
 
     fun backButton() {

@@ -1,23 +1,26 @@
 package com.task1.chat_app.ui.login
 
 import androidx.databinding.ObservableField
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import androidx.lifecycle.viewModelScope
 import com.task1.chat_app.DataUtils
 import com.task1.chat_app.base.BaseViewModel
-import com.task1.chat_app.database.checkUserExistence
-import com.task1.chat_app.database.model.AppUser
+import com.task1.domain.model.AppUser
+import com.task1.domain.repos.userFirebaseRepo.UserFirebaseRepo
+import com.task1.domain.repos.userFirestoreRepo.UserFirestoreRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel : BaseViewModel<NavigatorLogin>() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    val userFirebaseRepo: UserFirebaseRepo,
+    val userFirestoreRepo: UserFirestoreRepo
+) : BaseViewModel<NavigatorLogin>() {
 
     var email = ObservableField<String>()
     var emailError = ObservableField<String>()
     var password = ObservableField<String>()
     var passwordError = ObservableField<String>()
-    val auth = Firebase.auth
-
 
     fun login() {
 
@@ -29,12 +32,12 @@ class LoginViewModel : BaseViewModel<NavigatorLogin>() {
 
     fun openRegisterActivity() {
 
-        navigator?.navigateToRegisterActifity()
+        navigator?.navigateToRegisterActivity()
     }
 
     fun openHomeActivity() {
 
-        navigator?.navigateToHomeActifity()
+        navigator?.navigateToHomeActivity()
         clearFields()
     }
 
@@ -45,51 +48,54 @@ class LoginViewModel : BaseViewModel<NavigatorLogin>() {
 
     fun checkUserInFirestore(userID: String?) {
 
-        checkUserExistence(userID, OnSuccessListener {
+        viewModelScope.launch {
 
-            progressDialogLiveData.value = false
+            try {
 
-            val currentUser = it.toObject(AppUser::class.java)
+                val result =
+                    userFirestoreRepo.checkUserExistence(userID).toObject(AppUser::class.java)
+                progressDialogLiveData.value = false
 
-            if (currentUser != null) {
+                if (result != null) {
 
-                DataUtils.currentUser = currentUser
-                openHomeActivity()
-            } else {
+                    DataUtils.currentUser = result
+                    openHomeActivity()
+                } else {
+
+                    progressDialogLiveData.value = false
+                    messageLiveData.value = "Not a user \nPlease Register"
+                    clearFields()
+                }
+
+            } catch (ex: Exception) {
 
                 progressDialogLiveData.value = false
-                messageLiveData.value = "Not a user \nPlease Register"
-                clearFields()
-                return@OnSuccessListener
+                messageLiveData.value = ex.localizedMessage
             }
-        }, OnFailureListener {
-
-            progressDialogLiveData.value = false
-            messageLiveData.value = it.localizedMessage
-        })
-
+        }
     }
 
     private fun loginWithUser() {
 
         progressDialogLiveData.value = true
 
-        auth.signInWithEmailAndPassword(email.get()!!, password.get()!!)
-            .addOnCompleteListener { result ->
+        viewModelScope.launch {
 
-                if (result.isSuccessful) {
+            try {
 
-                    progressDialogLiveData.value = false
+                val result = userFirebaseRepo.signInFirebaseWithEmailAndPassword(
+                    email.get()!!,
+                    password.get()!!
+                )
+                progressDialogLiveData.value = false
+                checkUserInFirestore(result.user?.uid)
 
-                    checkUserInFirestore(result.result.user?.uid)
+            } catch (ex: Exception) {
 
-                } else {
-
-                    progressDialogLiveData.value = false
-                    messageLiveData.value = result.exception?.localizedMessage
-
-                }
+                progressDialogLiveData.value = false
+                messageLiveData.value = ex.localizedMessage
             }
+        }
     }
 
     private fun validate(): Boolean {

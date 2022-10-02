@@ -6,9 +6,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.task1.chat_app.DataUtils
 import com.task1.chat_app.R
-import com.task1.chat_app.database.model.Message
 import com.task1.chat_app.databinding.ItemMessageRecevieBinding
 import com.task1.chat_app.databinding.ItemMessageSentBinding
+import com.task1.domain.model.Message
 
 class ChatAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
