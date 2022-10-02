@@ -33,16 +33,26 @@ https://user-images.githubusercontent.com/80880411/187263704-941fab13-b102-4faa-
 * [Firebase](https://firebase.google.com/docs) - Tools to develop high-quality apps 
   * [Firebase Authentication](https://bit.ly/3RlAfZd) - Firebase Authentication aims to make building secure authentication systems easy, while improving the sign-in and onboarding experience for end users.
   * [Cloud Firestore](https://bit.ly/3RhWqPL) - Cloud Firestore is a NoSQL document database that lets you easily store, sync, and query data for your mobile and web apps - at global scale.
+* [Dependency Injection Using Hilt](https://developer.android.com/training/dependency-injection/hilt-android) - Hilt is a dependency injection library for Android that reduces the boilerplate of doing manual dependency injection in your project.
+* [Repository Pattern](https://medium.com/swlh/repository-pattern-in-android-c31d0268118c)   
 
 # Features
 * Firebase
    * Firebase Authentication (Email and Password)
    * Cloud Firestore
 
-# Architecture pattern Used
-* [MVVM](https://developer.android.com/jetpack/guide)
+# Code Architecture
+* [MVVM Architecture Pattern](https://developer.android.com/jetpack/guide)
 
 <p align="center">
 
 <img src="https://user-images.githubusercontent.com/86564639/166422026-4a5f4f9b-44b6-44c7-b4c6-852be532b41f.png">
+</p>
+
+* [Clean Architecture](https://developer.android.com/topic/architecture)
+
+
+<p align="center">
+
+![http://fernandocejas.com/2015/07/18/architecting-android-the-evolution/](https://github.com/android10/Sample-Data/blob/master/Android-CleanArchitecture/clean_architecture.png)
 </p>
